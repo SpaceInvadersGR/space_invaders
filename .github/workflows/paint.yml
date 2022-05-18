@@ -42,7 +42,8 @@ jobs:
           SECONDS_ELAPSED=$((RUN_TIME - MAY_15_2022))
           DAYS_ELAPSED=$((SECONDS_ELAPSED / (60 * 60 * 24)))
 
-          DAYS_ELAPSED=1
+          # test case
+          # DAYS_ELAPSED=1
 
           # calculate the offset, correcting overflow
           OFFSET=$(( $DAYS_ELAPSED  % 364 ))
