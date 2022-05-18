@@ -1,11 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Paint Contribution Map
 
-# Controls when the workflow will run
+# Run function every day at 2am UTC everyday
 on:
   schedule:
-  - cron: "0 7 * * *"
+  - cron: "0 2 * * *"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -24,17 +24,14 @@ jobs:
         with:
           token: ${{ secrets.PAT }}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      # Commands to run each time
+      - name: Conditionally make a change to log.txt
         run: |
-          # echo "Today's date is: $(date)"
-          # day=$(date +"%u")
-          # printf "Today's date is: $(date)" >> README.md
-          
           echo "Checking if a commit is needed today"
 
           # read in space invaders pattern
           PATTERN=$(head -n 1 pattern.txt)
+          echo $PATTERN
 
           # calculate days since May 15 2022
           MAY_15_2022=1652572800
@@ -47,7 +44,7 @@ jobs:
 
           # calculate the offset, correcting overflow
           OFFSET=$(( $DAYS_ELAPSED  % 364 ))
-          echo "The offset is $OFFSET"
+          echo "The offset is $OFFSET days"
 
           # map the offset to the value in the pattern
           PATTERN_VALUE=${PATTERN:OFFSET:1}
@@ -62,6 +59,7 @@ jobs:
              printf $"Made a commit at: $(date)\n" >> log.txt     
           fi
           
+      # make commit if log.txt was changed
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Automated commit
